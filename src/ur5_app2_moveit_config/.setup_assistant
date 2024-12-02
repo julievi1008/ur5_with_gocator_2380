@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ur5_app2
+    relative_path: urdf/ur5.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur5_robot.srdf
+  CONFIG:
+    author_name: Vi Tran Le
+    author_email: vi.tran@student.samk.fi
+    generated_timestamp: 1732789340

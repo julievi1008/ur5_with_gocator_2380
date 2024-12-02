@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+    <xacro:property name="pii" value='3.142' />
+    <link name="link_gocator_sensor">
+        <inertial>
+            <mass value="2.146"/>
+            <inertia
+                ixx="0.00001"
+                ixy='0'
+                ixz='0'
+                iyy="0.00001"
+                iyz='0'
+                izz="0.00001"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <mesh filename="package://ur5_app2/mesh/gocator_scanline-1.dae" scale="0.001 0.001 0.001">
+                </mesh>
+            </geometry>
+            
+        </visual>
+        <collision> <!-- 33' -->
+            <geometry>
+                <mesh filename="package://ur5_app2/mesh/gocator_scanline-1.dae"/> <!--find the package-->
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name='joint_gocator_sensor' type='fixed'>
+        <origin rpy='0 0 0' xyz='-0.04 -0.135 0'/>
+        <parent link='tool0'/>
+        <child link='link_gocator_sensor'/>
+    </joint>
+
+    <gazebo reference='link_gocator_sensor'>
+        <sensor type='ray' name='sensor_lidar'> <!--another sensor type
+                                                    <sensor type='camera' name='camera_sensor'>
+                                                    <sensor type='imu' name='imu_sensor'>
+                                                        Simulates the data typically provided by IMUs, 
+                                                        including measurements like linear acceleration, 
+                                                        angular velocity, and orientation. 
+                                                        IMUs are crucial for estimating the robot's motion and orientation.
+                                                        https://www.okxe.vn/blog/ky-thuat-xe/thiet-bi-imu 
+                                                    <sensor type='gps' name='gps_sensor'>
+                                                    <sensor type='range' name='range_sensor'>: cảm biến phạm vi
+                                                    <sensor type='sonar' name='ultrasonic_sensor'>:cảm biến siêu âm
+                                                    -->
+            <update_rate>10</update_rate>
+            <visualize>true</visualize>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>400</samples>
+                        <min_angle>-3.142</min_angle>
+                        <max_angle>${pii}</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <samples>1</samples>
+                        <min_angle>-0.05</min_angle>
+                        <max_angle>0.05</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.15</min>
+                    <max>12</max> <!--meter (m)-->
+                    <resolution>0.01</resolution> <!-- độ phân giải-->
+                </range>
+            </ray>
+            <plugin name='gazebo_ros_lidar' filename='libgazebo_ros_laser.so'>
+            <!--https://classic.gazebosim.org/tutorials?tut=ros_gzplugins-->
+                <gaussianNoise>0.01</gaussianNoise>
+                <updateRate>10</updateRate>
+                <topicName>lidar</topicName>
+                <minRange>0.15</minRange>
+                <maxRange>12</maxRange>
+                <frameName>link_lidar</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
